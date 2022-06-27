@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    card_view:cardBackgroundColor="#FF03DAC5"
+    card_view:cardCornerRadius="15dp"
+    card_view:cardElevation="5dp"
+    card_view:contentPadding="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp">
+
+        <TextView
+            android:layout_alignParentTop="true"
+            android:id="@+id/item_cointitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="cointitle"
+            android:textSize="20sp" />
+
+        <TextView
+            android:layout_below="@id/item_cointitle"
+            android:id="@+id/item_opening_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="opening_price"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_opening_price"
+            android:id="@+id/item_closing_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="closing_price"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_closing_price"
+            android:id="@+id/item_min_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="min_price"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_min_price"
+            android:id="@+id/item_max_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="max_price"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_max_price"
+            android:id="@+id/item_units_traded"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="units_traded"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_units_traded"
+            android:id="@+id/item_acc_trade_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="acc_trade_value"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_acc_trade_value"
+            android:id="@+id/item_prev_closing_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="prev_closing_price"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_prev_closing_price"
+            android:id="@+id/item_units_traded_24H"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="units_traded_24H"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_units_traded_24H"
+            android:id="@+id/item_acc_trade_value_24H"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="acc_trade_value_24H"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_acc_trade_value_24H"
+            android:id="@+id/item_fluctate_24H"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fluctate_24H"
+            android:textSize="15sp" />
+        <TextView
+            android:layout_below="@id/item_fluctate_24H"
+            android:id="@+id/item_fluctate_rate_24H"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="fluctate_rate_24H"
+            android:textSize="15sp" />
+
+
+
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

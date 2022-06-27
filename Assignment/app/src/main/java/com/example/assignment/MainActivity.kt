@@ -2,23 +2,29 @@ package com.example.assignment
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import kotlinx.android.synthetic.main.activity_main.*
 import org.json.JSONArray
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
 import kotlin.concurrent.thread
-
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
+import androidx.recyclerview.widget.RecyclerView
+import android.view.View
+import com.example.assignment.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    var mBinding : ActivityMainBinding? = null
+    val binding get() = mBinding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        mBinding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
-        // 택스트 뷰 생성
-        textView.text = ""
+
+
 
         thread(start = true) {
 
@@ -46,42 +52,41 @@ class MainActivity : AppCompatActivity() {
 
             val status: String = root.getString("status")
             val BTC = root.getJSONObject("data").getJSONObject("BTC")
-            val ETH = root.getJSONObject("data").getJSONObject("ETH")
+            val ETH = root.getJSONObject("data").getJSONObject("BTC")
 
+            val BTC_opening_price: String = BTC.getString("opening_price")
+            val BTC_closing_price: String = BTC.getString("closing_price")
+            val BTC_min_price: String = BTC.getString("min_price")
+            val BTC_max_price: String = BTC.getString("max_price")
+            val BTC_units_traded: String = BTC.getString("units_traded")
+            val BTC_acc_trade_value: String = BTC.getString("acc_trade_value")
+            val BTC_prev_closing_price: String = BTC.getString("prev_closing_price")
+            val BTC_units_traded_24H: String = BTC.getString("units_traded_24H")
+            val BTC_acc_trade_value_24H: String = BTC.getString("acc_trade_value_24H")
+            val BTC_fluctate_24H: String = BTC.getString("fluctate_24H")
+            val BTC_fluctate_rate_24H: String = BTC.getString("fluctate_rate_24H")
 
-            runOnUiThread { //화면출력
+            val ETH_opening_price: String = ETH.getString("opening_price")
+            val ETH_closing_price: String = ETH.getString("closing_price")
+            val ETH_min_price: String = ETH.getString("min_price")
+            val ETH_max_price: String = ETH.getString("max_price")
+            val ETH_units_traded: String = ETH.getString("units_traded")
+            val ETH_acc_trade_value: String = ETH.getString("acc_trade_value")
+            val ETH_prev_closing_price: String = ETH.getString("prev_closing_price")
+            val ETH_units_traded_24H: String = ETH.getString("units_traded_24H")
+            val ETH_acc_trade_value_24H: String = ETH.getString("acc_trade_value_24H")
+            val ETH_fluctate_24H: String = ETH.getString("fluctate_24H")
+            val ETH_fluctate_rate_24H: String = ETH.getString("fluctate_rate_24H")
 
-                val opening_price: String = BTC.getString("opening_price")
-                val closing_price: String = BTC.getString("closing_price")
-                val min_price: String = BTC.getString("min_price")
-                val max_price: String = BTC.getString("max_price")
-                val units_traded: String = BTC.getString("units_traded")
-                val acc_trade_value: String = BTC.getString("acc_trade_value")
-                val prev_closing_price: String = BTC.getString("prev_closing_price")
-                val units_traded_24H: String = BTC.getString("units_traded_24H")
-                val acc_trade_value_24H: String = BTC.getString("acc_trade_value_24H")
-                val fluctate_24H: String = BTC.getString("fluctate_24H")
-                val fluctate_rate_24H: String = BTC.getString("fluctate_rate_24H")
+            val items = arrayListOf(
+                Data(BTC_opening_price,BTC_closing_price,BTC_min_price,BTC_max_price,BTC_units_traded,BTC_acc_trade_value,BTC_prev_closing_price,BTC_units_traded_24H,BTC_acc_trade_value_24H,BTC_fluctate_24H,BTC_fluctate_rate_24H),
+                )
 
-
-                textView.append("시가 00시 기준 : ${opening_price}\n\n\n")
-                textView.append("종가 00시 기준 : ${closing_price}\n\n\n")
-                textView.append("저가 00시 기준 : ${min_price}\n\n\n")
-                textView.append("고가 00시 기준 : ${max_price}\n\n\n")
-                textView.append("거래량 00시 기준 : ${units_traded}\n\n\n")
-                textView.append("거래금액 00시 기준 : ${acc_trade_value}\n\n\n")
-                textView.append("전일종가 : ${prev_closing_price}\n\n\n")
-                textView.append("최근 24시간 거래량 : ${units_traded_24H}\n\n\n")
-                textView.append("최근 24시간 거래금액 : ${acc_trade_value_24H}\n\n\n")
-                textView.append("최근 24시간 변동가 : ${fluctate_24H}\n\n\n")
-                textView.append("최근 24시간 변동률 : ${fluctate_rate_24H}\n\n\n")
-
-
-
-
-
-            }
+            binding.recyclerviewMain.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+            binding.recyclerviewMain.setHasFixedSize(true)
+            binding.recyclerviewMain.adapter = MyAdapter(items)
         }
+
     }
 
 }
