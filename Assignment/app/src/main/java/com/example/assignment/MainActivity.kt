@@ -52,7 +52,7 @@ class MainActivity : AppCompatActivity() {
 
             val status: String = root.getString("status")
             val BTC = root.getJSONObject("data").getJSONObject("BTC")
-            val ETH = root.getJSONObject("data").getJSONObject("BTC")
+            val ETH = root.getJSONObject("data").getJSONObject("ETH")
 
             val BTC_opening_price: String = BTC.getString("opening_price")
             val BTC_closing_price: String = BTC.getString("closing_price")
@@ -80,11 +80,14 @@ class MainActivity : AppCompatActivity() {
 
             val items = arrayListOf(
                 Data(BTC_opening_price,BTC_closing_price,BTC_min_price,BTC_max_price,BTC_units_traded,BTC_acc_trade_value,BTC_prev_closing_price,BTC_units_traded_24H,BTC_acc_trade_value_24H,BTC_fluctate_24H,BTC_fluctate_rate_24H),
+                Data(ETH_opening_price,ETH_closing_price,ETH_min_price,ETH_max_price,ETH_units_traded,ETH_acc_trade_value,ETH_prev_closing_price,ETH_units_traded_24H,ETH_acc_trade_value_24H,ETH_fluctate_24H,ETH_fluctate_rate_24H),
                 )
+            binding.root.post{
+                binding.recyclerviewMain.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+                binding.recyclerviewMain.setHasFixedSize(true)
+                binding.recyclerviewMain.adapter = MyAdapter(items)
+            }
 
-            binding.recyclerviewMain.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
-            binding.recyclerviewMain.setHasFixedSize(true)
-            binding.recyclerviewMain.adapter = MyAdapter(items)
         }
 
     }
