@@ -1,6 +1,7 @@
 package com.example.assignment
 
 class Data (
+    var cointitle: String,
     var opening_price: String,
     var closing_price: String,
     var min_price: String,

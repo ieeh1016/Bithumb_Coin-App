@@ -6,20 +6,21 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Button
 import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 
-
 class MyAdapter(val items: ArrayList<Data>): RecyclerView.Adapter<MyAdapter.MyViewHolder>(){
-
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         var v: View = LayoutInflater.from(parent.context).inflate(R.layout.cardview_layout, parent, false)
-
         return MyViewHolder(v)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
+
+
+        holder.item_cointitle.text = items.get(position).cointitle
         holder.opening_price.text = items.get(position).opening_price
         holder.closing_price.text = items.get(position).closing_price
         holder.min_price.text = items.get(position).min_price
@@ -33,9 +34,12 @@ class MyAdapter(val items: ArrayList<Data>): RecyclerView.Adapter<MyAdapter.MyVi
         holder.fluctate_rate_24H.text = items.get(position).fluctate_rate_24H
 
 
+
+
     }
 
     inner class MyViewHolder(itemview: View) : RecyclerView.ViewHolder(itemview) { //카드뷰 레이아웃의 각 테스트뷰 아이디에 각 값을 넣음
+        val item_cointitle = itemview.findViewById<TextView>(R.id.item_cointitle)
         val opening_price = itemview.findViewById<TextView>(R.id.item_opening_price)
         val closing_price = itemview.findViewById<TextView>(R.id.item_closing_price)
         val min_price = itemview.findViewById<TextView>(R.id.item_min_price)
@@ -54,6 +58,10 @@ class MyAdapter(val items: ArrayList<Data>): RecyclerView.Adapter<MyAdapter.MyVi
     }
 
     override fun getItemCount(): Int {
+
         return items.size
     }
+
+
+
 }
