@@ -1,5 +1,6 @@
 package com.example.assignment
 
+import android.net.Network
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import org.json.JSONArray
@@ -32,9 +33,14 @@ class MainActivity : AppCompatActivity() {
         mBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val thread = NetworkThread()
+        thread.start()
+        thread.join()
 
-        
-        thread(start = true) {
+    }
+    inner class NetworkThread: Thread(){
+        override fun run() {
+
 
 
             val site = "https://api.bithumb.com/public/ticker/ALL_KRW" // 빗썸API 정보를 가지고 있는 주소
@@ -220,7 +226,7 @@ class MainActivity : AppCompatActivity() {
 
             binding.root.post{
 
-                binding.recyclerviewMain.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL,false)
+                binding.recyclerviewMain.layoutManager = LinearLayoutManager(this@MainActivity, LinearLayoutManager.VERTICAL,false)
                 binding.recyclerviewMain.setHasFixedSize(true)
                 binding.recyclerviewMain.adapter = MyAdapter(items)
 
@@ -235,11 +241,9 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-        
         }
-
-
     }
+
 
 
 }
