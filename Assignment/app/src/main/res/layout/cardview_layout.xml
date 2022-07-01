@@ -116,9 +116,14 @@
             android:layout_height="wrap_content"
             android:text="fluctate_rate_24H"
             android:textSize="15sp" />
-
-
-
+        <TextView
+            android:layout_marginTop="5dp"
+            android:layout_below="@id/item_fluctate_rate_24H"
+            android:id="@+id/date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="date"
+            android:textSize="15sp" />
 
     </RelativeLayout>
 

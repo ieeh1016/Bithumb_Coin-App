@@ -32,7 +32,7 @@ class MyAdapter(val items: ArrayList<Data>): RecyclerView.Adapter<MyAdapter.MyVi
         holder.acc_trade_value_24H.text = items.get(position).acc_trade_value_24H
         holder.fluctate_24H.text = items.get(position).fluctate_24H
         holder.fluctate_rate_24H.text = items.get(position).fluctate_rate_24H
-
+        holder.date.text = items.get(position).date
 
 
 
@@ -51,6 +51,7 @@ class MyAdapter(val items: ArrayList<Data>): RecyclerView.Adapter<MyAdapter.MyVi
         val acc_trade_value_24H = itemview.findViewById<TextView>(R.id.item_acc_trade_value_24H)
         val fluctate_24H = itemview.findViewById<TextView>(R.id.item_fluctate_24H)
         val fluctate_rate_24H = itemview.findViewById<TextView>(R.id.item_fluctate_rate_24H)
+        val date = itemview.findViewById<TextView>(R.id.date)
 
 
 
