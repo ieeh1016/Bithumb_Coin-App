@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
             val root = JSONObject(buf.toString())       // 객체로 가져옴
             val data = root.getJSONObject("data")  //data먼저 객체로가져옴
-            val names = data.names()?: JSONArray()     // data의 코인이름을 전부 가져옴
+            val names = data.names()?: JSONArray()     // json(코인들의 이름)이 들어있는 array를 만듬 , data의 코인이름을 전부 가져옴
             val date = data.getString("date")     // date는 먼저 다른 코인처럼 요소가 없기떄문에 따로 가져옴.
             val items = arrayListOf<Data>() // Data의 요소를 가지는 arrayList를 생성
 
