@@ -4,7 +4,8 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.databinding.CardviewLayoutBinding
-
+import java.text.SimpleDateFormat
+import java.util.Date
 
 class MyAdapter(private val items: List<Data>) : RecyclerView.Adapter<MyAdapter.MyViewHolder>() {
 
@@ -16,8 +17,9 @@ class MyAdapter(private val items: List<Data>) : RecyclerView.Adapter<MyAdapter.
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = items[position]
 
+
         with(holder.binding) {
-            itemCointitle.text = item.cointitle
+            itemCointitle.text = "코인 Name : ${item.cointitle}"
             itemOpeningPrice.text = "시가 00시 기준: ${item.opening_price}"
             itemClosingPrice.text = "종가 00시 기준: ${item.closing_price}"
             itemMinPrice.text = "저가 00시 기준: ${item.min_price}"
@@ -35,7 +37,7 @@ class MyAdapter(private val items: List<Data>) : RecyclerView.Adapter<MyAdapter.
 
     class MyViewHolder(val binding: CardviewLayoutBinding) : RecyclerView.ViewHolder(binding.root)
     // ViewHolder 의 생성자 매개변수로 binding 을 받도록 함
-    // RecyclerView.ViewHolder의 생성자 매개변수는 View 이므로 Binding 의 root 를 넘겨줌
+    // RecyclerView.ViewHolder 의 생성자 매개변수는 View 이므로 Binding 의 root 를 넘겨줌
 
     override fun getItemCount(): Int {
         return items.size
