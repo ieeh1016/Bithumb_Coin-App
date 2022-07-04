@@ -73,14 +73,14 @@ class MainActivity : AppCompatActivity() {
 
             for (i in (0 until names.length())) { // name의 길이(비트코인데이터양)의 -1 번까지 반복
                 val name = names.getString(i)       // data 의 요소 이름 (코인 이름)
-                if (name.equals("date")) continue       // data 의 요소 이름이 date 이면 건너뛴다.
+                if (name.equals("date")) continue       // data 의 요소 이름이 date 이면(비트코인이 아니면) 건너뛴다.
                 val element = data.getJSONObject(name)  // 요소 이름에 해당하는 JSON 객체 가져옴
                 items.add(Data(name, date, element))    // 가져온 Data타입의 요소들을 포함하여 items(arrayList)로 담음
             }
 
 
             Handler.post{ //UI작업은 무조건 메인쓰레드에서 해야됨 Handler.post 사용
-                callback?.invoke(items) //콜백 함수
+                callback.invoke(items) //콜백 함수
             }
         }
     }
