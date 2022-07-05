@@ -6,6 +6,7 @@ import android.os.Looper
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.room.Room
 import com.example.assignment.databinding.ActivityMainBinding
 import org.json.JSONArray
 import org.json.JSONObject
@@ -18,11 +19,17 @@ class MainActivity : AppCompatActivity() {
 
     private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) } //by lazy를 사용해서 처음 호출될 때 초기화 되도록 설정한다. (by lazy = 처음 선언할때 바로 초기화(할당))
 
+    lateinit var db: AppDatabase
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root) //setContentView에는 binding.root 를 전달.
 
+/*        db = Room.databaseBuilder(
+            applicationContext,
+            AppDatabase::class.java,
+            "DataDB"
+        ).build()*/
 
         NetworkThread { // 최초 앱 실행시 데이터를 보여주기 위해 NetworkThread 호출
             binding.recyclerviewMain.adapter = MyAdapter(it)

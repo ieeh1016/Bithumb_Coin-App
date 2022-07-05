@@ -1,21 +1,25 @@
 package com.example.assignment
 
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import org.json.JSONObject
 
-class Data(
-    var cointitle: String,
-    var opening_price: String,
-    var closing_price: String,
-    var min_price: String,
-    var max_price: String,
-    var units_traded: String,
-    var acc_trade_value: String,
-    var prev_closing_price: String,
-    var units_traded_24H: String,
-    var acc_trade_value_24H: String,
-    var fluctate_24H: String,
-    var fluctate_rate_24H: String,
-    var date: String,
+@Entity
+data class Data(
+    @PrimaryKey var cointitle: String,
+    @ColumnInfo(name = "opening_price") var opening_price: String,
+    @ColumnInfo(name = "closing_price") var closing_price: String,
+    @ColumnInfo(name = "min_price") var min_price: String,
+    @ColumnInfo(name = "max_price") var max_price: String,
+    @ColumnInfo(name = "units_traded") var units_traded: String,
+    @ColumnInfo(name = "acc_trade_value") var acc_trade_value: String,
+    @ColumnInfo(name = "prev_closing_price") var prev_closing_price: String,
+    @ColumnInfo(name = "units_traded_24H") var units_traded_24H: String,
+    @ColumnInfo(name = "acc_trade_value_24H") var acc_trade_value_24H: String,
+    @ColumnInfo(name = "fluctate_24H") var fluctate_24H: String,
+    @ColumnInfo(name = "fluctate_rate_24H") var fluctate_rate_24H: String,
+    @ColumnInfo(name = "date") var date: String,
 )
 {
     constructor(title: String, date: String, json: JSONObject) : this(
