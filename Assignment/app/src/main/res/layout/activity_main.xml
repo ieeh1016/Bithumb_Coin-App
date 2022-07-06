@@ -12,10 +12,10 @@ tools:context=".MainActivity">
         android:hint="Search"
         android:inputType="text"
         android:maxLines="1"
+        android:imeOptions="actionSearch"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview_main"
@@ -36,6 +36,8 @@ tools:context=".MainActivity">
         android:layout_gravity="end|bottom"
         android:background="@drawable/round_button"
         android:text="Reflesh"
+        android:src="@drawable/ic_baseline_refresh_24"
+        app:backgroundTint="#CEECF5"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"

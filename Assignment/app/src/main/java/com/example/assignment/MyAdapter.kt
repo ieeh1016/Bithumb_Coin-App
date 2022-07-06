@@ -33,15 +33,6 @@ class MyAdapter() : ListAdapter<Data, MyAdapter.MyViewHolder>(object : DiffUtil.
             itemCointitle.text = "코인 Name : ${item.cointitle}"
             itemOpeningPrice.text = "시가 00시 기준: ${item.opening_price}"
             itemClosingPrice.text = "종가 00시 기준: ${item.closing_price}"
-            itemMinPrice.text = "저가 00시 기준: ${item.min_price}"
-            itemMaxPrice.text = "고가 00시 기준: ${item.max_price}"
-            itemUnitsTraded.text = "거래량 00시 기준: ${item.units_traded}"
-            itemAccTradeValue.text = "거래금액 00시 기준: ${item.acc_trade_value}"
-            itemPrevClosingPrice.text = "전일종가: ${item.prev_closing_price}"
-            itemUnitsTraded24H.text = "최근 24시간 거래량: ${item.units_traded_24H}"
-            itemAccTradeValue24H.text = "최근 24시간 거래금액: ${item.acc_trade_value_24H}"
-            itemFluctate24H.text = "최근 24시간 변동가: ${item.fluctate_24H}"
-            itemFluctateRate24H.text = "최근 24시간 변동률: ${item.fluctate_rate_24H}"
             date.text = "Timestamp: ${item.date}"
         }
     }

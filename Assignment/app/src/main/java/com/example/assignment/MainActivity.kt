@@ -1,11 +1,11 @@
 package com.example.assignment
 
+import android.app.Activity
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.widget.Toast
+import android.view.KeyEvent
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.core.widget.addTextChangedListener
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -38,7 +38,7 @@ class MainActivity : AppCompatActivity() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     //Dispatchers.IO 에서 동작
-                    lifecycleScope.launch(Dispatchers.IO) {
+                    CoroutineScope(Dispatchers.IO).launch {
                         val data = runData()
                         this@MainActivity.db.DataDao().insertAll(*data.toTypedArray()) //items에들어있는 코인들을 가변인자로써 몽땅삽입
                         launch(Dispatchers.Main) {
@@ -54,29 +54,51 @@ class MainActivity : AppCompatActivity() {
                 setHasFixedSize(true)
                 adapter = this@MainActivity.adapter
             }
+        // refresh 버튼 리스너 설정
+        refleshButton.setOnClickListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                refresh(true)
+            }
+        }
+
+
+        searchEditText.addTextChangedListener {
+            CoroutineScope(Dispatchers.IO).launch {
+                refresh()
+            }
+        }
+
+        searchEditText.setOnKeyListener { view, i, keyEvent ->
+            if (i == KeyEvent.KEYCODE_ENTER || i == KeyEvent.KEYCODE_SEARCH) {
+                (getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken, 0)
+            }
+            return@setOnKeyListener false
         }
     }
 
-    private fun refresh() {
-        TODO("Not yet implemented")
+    CoroutineScope(Dispatchers.IO).launch {
+        refresh()
     }
+}
 
-
-
-    /*
-    에디터 만들기
-    binding.searchEditText.setOnKeyListener { view, i, keyEvent ->
-        if(i == KeyEvent.KEYCODE_ENTER && keyEvent.action ==KeyEvent.ACTION_DOWN){
-            search(binding.searchEditText.text.toString())
-            return@setOnKeyListener true
+    private suspend fun refresh(check: Boolean = false) = withContext(Dispatchers.IO) {
+        val query = withContext(Dispatchers.Main) {
+            binding.searchEditText.text.toString()
         }
-        return@setOnKeyListener false
+
+        with(db.DataDao()) {
+            if (check) {
+                val newData = runData()
+                insertAll(*newData.toTypedArray())
+            }
+
+            val data = getAll(query)
+
+            withContext(Dispatchers.Main) {
+                adapter.submitList(data)
+            }
+        }
     }
-
-    함수 제작필요
-    private fun search(text: String){
-
-    }*/
 
 
     private suspend fun runData(): List<Data> = withContext(Dispatchers.IO) {
