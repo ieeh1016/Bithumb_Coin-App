@@ -1,11 +1,16 @@
 package com.example.assignment
 
 import androidx.room.Dao
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
 interface DataDao{
-    @Query("SELECT * FROM Data")
-    fun getAll(): List<Data>
+    @Query("SELECT * FROM Data WHERE cointitle LIKE '%' || :query || '%'")
+    suspend fun getAll(query: String): List<Data>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE) //충돌처리 방식
+    suspend fun insertAll(vararg dataSet: Data) //가변인자
 
 }
