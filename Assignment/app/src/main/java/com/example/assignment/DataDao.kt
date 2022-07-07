@@ -10,6 +10,9 @@ interface DataDao{
     @Query("SELECT * FROM Data WHERE cointitle LIKE '%' || :query || '%'")
     suspend fun getAll(query: String): List<Data>
 
+    @Query("SELECT * FROM Data WHERE cointitle = :coin")
+    suspend fun getItem(coin: String): Data
+
     @Query("SELECT * FROM Data")
     suspend fun getAllData(): List<Data>
 

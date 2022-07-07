@@ -1,10 +1,13 @@
 package com.example.assignment
 
+import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import kotlinx.android.parcel.Parcelize
 import org.json.JSONObject
 
+@Parcelize
 @Entity
 data class Data(
     @PrimaryKey var cointitle: String,
@@ -20,7 +23,7 @@ data class Data(
     @ColumnInfo(name = "fluctate_24H") var fluctate_24H: String,
     @ColumnInfo(name = "fluctate_rate_24H") var fluctate_rate_24H: String,
     @ColumnInfo(name = "date") var date: String,
-)
+): Parcelable
 {
     constructor(title: String, date: String, json: JSONObject) : this(
         title,

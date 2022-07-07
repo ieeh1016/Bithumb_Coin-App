@@ -1,14 +1,13 @@
 package com.example.assignment
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
-import android.view.View
 import android.view.inputmethod.InputMethodManager
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.widget.addTextChangedListener
+import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -23,7 +22,6 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
-import android.content.Intent as Intent
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,22 +30,31 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var db: AppDatabase
 
-    private val adapter by lazy { MyAdapter() }
+    private val adapter by lazy {
+        MyAdapter().apply {
+            setItemClickListener(object : MyAdapter.onItemClickListener {
+                override fun onClick(item: Data) {
+                    // 데이터 자체를 DetailActivity 로 넘겨줌
+                    val intent = Intent(this@MainActivity, DetailActivity::class.java).apply {
+                        putExtra("item", item)
+                    }
+                    startActivity(intent)
+                }
+            })
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) { //CoroutineScope - 특정한 목적의 Dispatcher를 지정하여 제어 및 동작이 가능한 범위
         super.onCreate(savedInstanceState)
         setContentView(binding.root) //setContentView에는 binding.root 를 전달.
 
-        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "DataDB2").addCallback(object : RoomDatabase.Callback() {
+        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "DataDBDB1")
+            .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
-                    //Dispatchers.IO 에서 동작
+
                     CoroutineScope(Dispatchers.IO).launch {
-                        val data = runData()
-                        this@MainActivity.db.DataDao().insertAll(*data.toTypedArray()) //items에들어있는 코인들을 가변인자로써 몽땅삽입
-                        launch(Dispatchers.Main) {
-                            adapter.submitList(data) //data로 교체
-                        }
+                        refresh(true) // refresh 함수는 위 코드와 똑같은 기능을 수행하는 함수이므로 간단하게 refresh 만 호출
                     }
                 }
             }).build()
@@ -58,40 +65,39 @@ class MainActivity : AppCompatActivity() {
                 setHasFixedSize(true)
                 adapter = this@MainActivity.adapter
             }
-        // refresh 버튼 리스너 설정
-        refleshButton.setOnClickListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                refresh(true)
+            // refresh 버튼 리스너 설정
+            refleshButton.setOnClickListener {
+                CoroutineScope(Dispatchers.IO).launch {
+                    refresh(true)
+                }
             }
-        }
 
-        //에디터에 글을 하나씩입력할때마다 UI 갱신
-        searchEditText.addTextChangedListener {
-            CoroutineScope(Dispatchers.IO).launch {
-                refresh()
+            //에디터에 글을 하나씩입력할때마다 UI 갱신
+            searchEditText.addTextChangedListener {
+                CoroutineScope(Dispatchers.IO).launch {
+                    refresh()
+                }
             }
-        }
 
-        //에디터키 클릭시 자판을 내려가게 만듬.
-       searchEditText.setOnKeyListener { view, i, keyEvent ->
-            if (i == KeyEvent.KEYCODE_ENTER || i == KeyEvent.KEYCODE_SEARCH) {
-                (getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(view.windowToken, 0)
+            //에디터키 클릭시 자판을 내려가게 만듬.
+            searchEditText.setOnKeyListener { view, i, keyEvent ->
+                if (i == KeyEvent.KEYCODE_ENTER || i == KeyEvent.KEYCODE_SEARCH) {
+                    (getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
+                        view.windowToken,
+                        0
+                    )
+                }
+                return@setOnKeyListener false
             }
-            return@setOnKeyListener false
         }
     }
 
-    CoroutineScope(Dispatchers.IO).launch {
-        refresh()
+    override fun onResume() {// 상세 화면에서 새로고침을 하고, 다시 Main 화면으로 돌아온 경우, 새로고침된 데이터를 보여줄 수 있도록 onResume 에서 refresh 함수 호출
+        super.onResume()
+        CoroutineScope(Dispatchers.IO).launch {
+            refresh()
+        }
     }
-        adapter.setItemClickListener(object: MyAdapter.onItemClickListener{
-            override fun onClick(v: View, position: Int) {
-                val intent = Intent(this@MainActivity,DetailActivity::class.java)
-                intent.putExtra("position","${position}")
-                startActivity(intent)
-            }
-        })
-}
 
     private suspend fun refresh(check: Boolean = false) = withContext(Dispatchers.IO) {
         val query = withContext(Dispatchers.Main) {
@@ -111,7 +117,6 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
 
     private suspend fun runData(): List<Data> = withContext(Dispatchers.IO) {
         val site = "https://api.bithumb.com/public/ticker/ALL_KRW" // 빗썸API 정보를 가지고 있는 주소
@@ -145,6 +150,5 @@ class MainActivity : AppCompatActivity() {
         }
 
         return@withContext items
-
     }
 }

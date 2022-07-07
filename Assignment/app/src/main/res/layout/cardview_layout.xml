@@ -63,6 +63,16 @@
                 android:text="거래량"
                 android:textSize="15sp" />
 
+            <TextView
+                android:textColor="@color/white"
+                android:layout_marginTop="5dp"
+                android:layout_below="@id/item_units_traded_24H"
+                android:id="@+id/item_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="timestamp"
+                android:textSize="15sp" />
+
 
         </RelativeLayout>
     </LinearLayout>
