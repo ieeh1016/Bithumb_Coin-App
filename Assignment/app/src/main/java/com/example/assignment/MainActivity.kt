@@ -52,9 +52,8 @@ class MainActivity : AppCompatActivity() {
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
-
                     CoroutineScope(Dispatchers.IO).launch {
-                        refresh(true) // refresh 함수는 위 코드와 똑같은 기능을 수행하는 함수이므로 간단하게 refresh 만 호출
+                        refresh(true)
                     }
                 }
             }).build()
@@ -65,7 +64,7 @@ class MainActivity : AppCompatActivity() {
                 setHasFixedSize(true)
                 adapter = this@MainActivity.adapter
             }
-            // refresh 버튼 리스너 설정
+            // refresh 버튼 리스너 설정 - refresh버튼을 누르면 check인자값을 true로 바꿔 api에서 데이터를 다시 읽어온다.
             refleshButton.setOnClickListener {
                 CoroutineScope(Dispatchers.IO).launch {
                     refresh(true)
@@ -79,7 +78,7 @@ class MainActivity : AppCompatActivity() {
                 }
             }
 
-            //에디터키 클릭시 자판을 내려가게 만듬.
+            //에디터에서 엔터, SEARCH를 클릭시 자판을 내려가게 만듬
             searchEditText.setOnKeyListener { view, i, keyEvent ->
                 if (i == KeyEvent.KEYCODE_ENTER || i == KeyEvent.KEYCODE_SEARCH) {
                     (getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
@@ -89,29 +88,32 @@ class MainActivity : AppCompatActivity() {
                 }
                 return@setOnKeyListener false
             }
+            CoroutineScope(Dispatchers.IO).launch {
+                refresh()
+            }
         }
     }
-
-    override fun onResume() {// 상세 화면에서 새로고침을 하고, 다시 Main 화면으로 돌아온 경우, 새로고침된 데이터를 보여줄 수 있도록 onResume 에서 refresh 함수 호출
+    // 상세 화면에서 새로고침을 하고 다시 Main 화면으로 돌아온 경우 새로고침된 데이터를 보여줄 수 있도록 onResume 에서 refresh 함수 호출한다
+    override fun onResume() {
         super.onResume()
         CoroutineScope(Dispatchers.IO).launch {
             refresh()
         }
     }
-
+    //chekc라는 인자를 boolean타입으로 false로 초기화시켜두고
     private suspend fun refresh(check: Boolean = false) = withContext(Dispatchers.IO) {
         val query = withContext(Dispatchers.Main) {
             binding.searchEditText.text.toString()
         }
 
         with(db.DataDao()) {
+            //check 가 true가 되었을때는 데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
             if (check) {
                 val newData = runData()
                 insertAll(*newData.toTypedArray())
             }
-
             val data = getAll(query)
-
+            // 그렇게 ROOM에 저장된 데이터 UI로 갱신시킴 - UI갱신이므로 Dispatchers.Main에서 작업
             withContext(Dispatchers.Main) {
                 adapter.submitList(data)
             }

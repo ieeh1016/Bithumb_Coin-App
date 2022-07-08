@@ -9,7 +9,7 @@ import com.example.assignment.databinding.CardviewLayoutBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 
-
+//ListAdapter와 DiffUtil 을 이용하여 수정이 필요한 부분만 갱신시킴으로써 갱신할때마다 adapter를 set하여 스크롤이 가장 위로 올라가는 부분을 해결하였다.
 class MyAdapter() : ListAdapter<Data, MyAdapter.MyViewHolder>(object : DiffUtil.ItemCallback<Data>() {
     override fun areItemsTheSame(oldItem: Data, newItem: Data): Boolean {
         return oldItem.cointitle == newItem.cointitle
@@ -34,7 +34,7 @@ class MyAdapter() : ListAdapter<Data, MyAdapter.MyViewHolder>(object : DiffUtil.
             itemOpeningPrice.text = "시가: ${item.opening_price} 원"
             itemClosingPrice.text = "현재가: ${item.closing_price} 원"
             itemUnitsTraded24H.text = "거래량: ${item.units_traded_24H}"
-            itemDate.text = "거래량: ${item.date}"
+            itemDate.text = "TimeStamp: ${item.date}"
 
             root.setOnClickListener {
                 itemClickListener?.onClick(item)

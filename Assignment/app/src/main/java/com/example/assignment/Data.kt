@@ -7,6 +7,8 @@ import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import org.json.JSONObject
 
+//직렬화
+
 @Parcelize
 @Entity
 data class Data(

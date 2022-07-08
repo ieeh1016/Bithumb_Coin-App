@@ -19,14 +19,17 @@
             android:layout_margin="16dp"
             android:gravity="center"
             android:text="COIN"
+            android:textStyle="bold"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="35sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
 
         <RelativeLayout
+            android:layout_margin="12dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="15dp">
@@ -38,7 +41,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="opening_price"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_closing_price"
@@ -47,7 +52,9 @@
                 android:layout_below="@id/detail_item_opening_price"
                 android:layout_marginTop="5dp"
                 android:text="closing_price"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_min_price"
@@ -56,7 +63,9 @@
                 android:layout_below="@id/detail_item_closing_price"
                 android:layout_marginTop="5dp"
                 android:text="min_price"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_max_price"
@@ -65,7 +74,9 @@
                 android:layout_below="@id/detail_item_min_price"
                 android:layout_marginTop="5dp"
                 android:text="max_price"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_units_traded"
@@ -74,7 +85,9 @@
                 android:layout_below="@id/detail_item_max_price"
                 android:layout_marginTop="5dp"
                 android:text="units_traded"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_acc_trade_value"
@@ -83,7 +96,9 @@
                 android:layout_below="@id/detail_item_units_traded"
                 android:layout_marginTop="5dp"
                 android:text="acc_trade_value"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_prev_closing_price"
@@ -92,7 +107,9 @@
                 android:layout_below="@id/detail_item_acc_trade_value"
                 android:layout_marginTop="5dp"
                 android:text="prev_closing_price"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_units_traded_24H"
@@ -101,7 +118,9 @@
                 android:layout_below="@id/detail_item_prev_closing_price"
                 android:layout_marginTop="5dp"
                 android:text="units_traded_24H"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_acc_trade_value_24H"
@@ -110,7 +129,9 @@
                 android:layout_below="@id/detail_item_units_traded_24H"
                 android:layout_marginTop="5dp"
                 android:text="acc_trade_value_24H"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_fluctate_24H"
@@ -119,7 +140,9 @@
                 android:layout_below="@id/detail_item_acc_trade_value_24H"
                 android:layout_marginTop="5dp"
                 android:text="fluctate_24H"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_item_fluctate_rate_24H"
@@ -128,7 +151,9 @@
                 android:layout_below="@id/detail_item_fluctate_24H"
                 android:layout_marginTop="5dp"
                 android:text="fluctate_rate_24H"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/detail_date"
@@ -137,7 +162,9 @@
                 android:layout_below="@id/detail_item_fluctate_rate_24H"
                 android:layout_marginTop="5dp"
                 android:text="date"
-                android:textSize="15sp" />
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="20sp" />
 
         </RelativeLayout>
     </LinearLayout>
