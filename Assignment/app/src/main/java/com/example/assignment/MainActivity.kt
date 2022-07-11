@@ -3,6 +3,7 @@ package com.example.assignment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -117,8 +118,12 @@ class MainActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 adapter.submitList(data)
             }
+            val newData = runData()
+            insertDataAll(*newData.toTypedArray())
         }
+
     }
+
 
     private suspend fun runData(): List<Data> = withContext(Dispatchers.IO) {
         val site = "https://api.bithumb.com/public/ticker/ALL_KRW" // 빗썸API 정보를 가지고 있는 주소
@@ -150,7 +155,7 @@ class MainActivity : AppCompatActivity() {
             val element = data.getJSONObject(name)  // 요소 이름에 해당하는 JSON 객체 가져옴
             items.add(Data(name, date, element))    // 가져온 Data타입의 요소들을 포함하여 items(arrayList)로 담음
         }
-
+        Log.d("코인길이","${items.size}")
         return@withContext items
     }
 }

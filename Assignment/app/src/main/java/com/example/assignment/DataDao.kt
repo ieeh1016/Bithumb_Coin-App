@@ -22,6 +22,9 @@ interface DataDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE) //충돌처리 방식
     suspend fun insertAll(vararg dataSet: Data) //가변인자
 
+    @Insert
+    suspend fun insertDataAll(vararg dataSet: Data)
+
     @Query("DELETE FROM data")
     suspend fun deleteAll()
 

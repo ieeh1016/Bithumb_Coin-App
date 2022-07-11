@@ -12,7 +12,7 @@ import org.json.JSONObject
 @Parcelize
 @Entity
 data class Data(
-    @PrimaryKey var cointitle: String,
+    @ColumnInfo(name = "cointitle") var cointitle: String,
     @ColumnInfo(name = "opening_price") var opening_price: String,
     @ColumnInfo(name = "closing_price") var closing_price: String,
     @ColumnInfo(name = "min_price") var min_price: String,
