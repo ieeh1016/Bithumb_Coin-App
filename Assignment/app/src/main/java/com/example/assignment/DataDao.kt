@@ -6,14 +6,23 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
-interface DataDao{
+interface DataDao {
+
     //Like문을 이용하여 입력한 문구가 들어가는 코인(cointitle을 이용)을 가져온다.
-    @Query("SELECT * FROM Data WHERE cointitle LIKE '%' || :query || '%'")
+    @Query("SELECT * FROM Data WHERE date = (SELECT max(date) FROM Data) and cointitle LIKE '%' || :query || '%'")
     suspend fun getAll(query: String): List<Data>
+
+    @Query("SELECT * FROM Data WHERE cointitle = :query ORDER BY date DESC")
+    suspend fun getAll2(query: String): List<Data>
 
     //하나의 데이터를 읽어온다.
     @Query("SELECT * FROM Data WHERE cointitle = :coin")
     suspend fun getItem(coin: String): Data
+
+    @Query("SELECT cointitle FROM Data WHERE cointitle = :coin")
+    suspend fun getItem2(coin: String): String
+
+
 
     @Query("SELECT * FROM Data")
     suspend fun getAllData(): List<Data>
@@ -22,8 +31,8 @@ interface DataDao{
     @Insert(onConflict = OnConflictStrategy.REPLACE) //충돌처리 방식
     suspend fun insertAll(vararg dataSet: Data) //가변인자
 
-    @Insert
-    suspend fun insertDataAll(vararg dataSet: Data)
+    @Insert //충돌처리 방식
+    suspend fun insert2All(vararg dataSet: Data) //가변인자
 
     @Query("DELETE FROM data")
     suspend fun deleteAll()

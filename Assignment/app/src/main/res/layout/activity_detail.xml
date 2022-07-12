@@ -4,53 +4,180 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
-
-    <TextView
-        android:layout_margin="10dp"
-        android:padding="8dp"
-        android:background="@drawable/edittext_rounded_corner_rectangle"
-        android:id="@+id/TextView"
-        android:layout_width="0dp"
+    tools:context=".DetailActivity">
+    <LinearLayout
+        android:id="@+id/detail_linearLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:inputType="text"
-        android:maxLines="1"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        android:text="Coin 상세정보"
-        android:gravity="center"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/recyclerview_main"/>
+        tools:ignore="MissingConstraints"
+        android:orientation="horizontal">
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@drawable/ic_baseline_arrow_back_ios_new_24"/>
+        <TextView
+            android:id="@+id/detail_cointitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="left"
+            android:inputType="text"
+            android:maxLines="1"
+            android:padding="8dp"
+            android:text="코인이름"
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@id/graph"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recyclerview_main"
-        android:layout_height="0dp"
-        android:layout_width="0dp"
-        app:layout_constraintTop_toBottomOf="@id/TextView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        >
-    </androidx.recyclerview.widget.RecyclerView>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:layout_margin="15dp"
-        android:id="@+id/reflesh_button"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/linearlayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:src="@drawable/ic_baseline_refresh_24"
-        app:backgroundTint="#FF0000"
-        app:fabSize="mini"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:ignore="MissingConstraints" />
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/detail_linearLayout"
+        tools:ignore="MissingConstraints">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:background="@drawable/edittext_rounded_corner_rectangle"
+            android:padding="15dp">
+
+
+            <TextView
+                android:id="@+id/detail_item_opening_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="opening_price"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_closing_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_opening_price"
+                android:layout_marginTop="5dp"
+                android:text="closing_price"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_min_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_closing_price"
+                android:layout_marginTop="5dp"
+                android:text="min_price"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_max_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_min_price"
+                android:layout_marginTop="5dp"
+                android:text="max_price"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_units_traded"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_max_price"
+                android:layout_marginTop="5dp"
+                android:text="units_traded"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_acc_trade_value"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_units_traded"
+                android:layout_marginTop="5dp"
+                android:text="acc_trade_value"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_prev_closing_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_acc_trade_value"
+                android:layout_marginTop="5dp"
+                android:text="prev_closing_price"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_units_traded_24H"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_prev_closing_price"
+                android:layout_marginTop="5dp"
+                android:text="units_traded_24H"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_acc_trade_value_24H"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_units_traded_24H"
+                android:layout_marginTop="5dp"
+                android:text="acc_trade_value_24H"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_fluctate_24H"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_acc_trade_value_24H"
+                android:layout_marginTop="5dp"
+                android:text="fluctate_24H"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/detail_item_fluctate_rate_24H"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/detail_item_fluctate_24H"
+                android:layout_marginTop="5dp"
+                android:text="fluctate_rate_24H"
+                android:textColor="@color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
 
 
 
+        </RelativeLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

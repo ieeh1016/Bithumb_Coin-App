@@ -3,6 +3,7 @@ package com.example.assignment
 import android.os.Parcelable
 import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 import kotlinx.android.parcel.Parcelize
 import org.json.JSONObject
@@ -10,7 +11,7 @@ import org.json.JSONObject
 //직렬화
 
 @Parcelize
-@Entity
+@Entity(primaryKeys = arrayOf("cointitle","date"))
 data class Data(
     @ColumnInfo(name = "cointitle") var cointitle: String,
     @ColumnInfo(name = "opening_price") var opening_price: String,
@@ -25,8 +26,7 @@ data class Data(
     @ColumnInfo(name = "fluctate_24H") var fluctate_24H: String,
     @ColumnInfo(name = "fluctate_rate_24H") var fluctate_rate_24H: String,
     @ColumnInfo(name = "date") var date: String,
-): Parcelable
-{
+) : Parcelable {
     constructor(title: String, date: String, json: JSONObject) : this(
         title,
         json.getString("opening_price"),

@@ -1,20 +1,22 @@
 package com.example.assignment
 
-import android.app.Activity
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
-import android.view.KeyEvent
-import android.view.inputmethod.InputMethodManager
+import android.view.View
+import android.widget.Button
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
-import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.assignment.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
+import com.example.assignment.databinding.ActivityListBinding
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.ChartData
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -23,20 +25,26 @@ import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.URL
+import java.util.*
+import kotlin.collections.ArrayList
 
+class ListActivity : AppCompatActivity(){
 
-class MainActivity : AppCompatActivity() {
+    private val TAG = this.javaClass.simpleName
+    lateinit var lineChart: LineChart
+    //private val chartData = ArrayList<ChartData>()
 
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) } //by lazy를 사용해서 처음 호출될 때 초기화 되도록 설정한다. (by lazy = 처음 선언할때 바로 초기화(할당))
+    private var _item: Data? = null
+    private val item get() = _item!!
 
-    private lateinit var db: AppDatabase
-
+    private val binding by lazy { ActivityListBinding.inflate(layoutInflater) }//by lazy를 사용해서 처음 호출될 때 초기화 되도록 설정한다. (by lazy = 처음 선언할때 바로 초기화(할당))
+    private val db by lazy { Room.databaseBuilder(applicationContext, AppDatabase::class.java, "DataDB888").build() }
     private val adapter by lazy {
-        MyAdapter().apply {
-            setItemClickListener(object : MyAdapter.onItemClickListener {
+        MyListAdapter().apply {
+            setItemClickListener(object : MyListAdapter.onItemClickListener {
                 override fun onClick(item: Data) {
-                    // 데이터 자체를 ListActivity 로 넘겨줌
-                    val intent = Intent(this@MainActivity, ListActivity::class.java).apply {
+                    // 데이터 자체를 DetailActivity 로 넘겨줌
+                    val intent = Intent(this@ListActivity, DetailActivity::class.java).apply {
                         putExtra("item", item)
                     }
                     startActivity(intent)
@@ -44,73 +52,98 @@ class MainActivity : AppCompatActivity() {
             })
         }
     }
-
-    override fun onCreate(savedInstanceState: Bundle?) { //CoroutineScope - 특정한 목적의 Dispatcher를 지정하여 제어 및 동작이 가능한 범위
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root) //setContentView에는 binding.root 를 전달.
+/*
+        chartData.clear()
+        LineChart(chartData)
+*/
 
-        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "DataDB888")
-            .addCallback(object : RoomDatabase.Callback() {
-                override fun onCreate(db: SupportSQLiteDatabase) {
-                    super.onCreate(db)
-                    lifecycleScope.launch {
-                        refresh()
-                    }
-                }
-            }).build()
+
+
+        _item = intent?.getParcelableExtra("item")
+
+        if (savedInstanceState != null) {
+            _item = savedInstanceState.getParcelable("item")
+        }
+
 
         with(binding) { //Non-nullable 수신 객체이고 결과가 필요하지 않을때 with 을 사용함.
-            recyclerviewMain.apply {
-                layoutManager =
-                    LinearLayoutManager(this@MainActivity) // Recycler view layout manager 설정
+            recyclerviewList.apply {
+                layoutManager = LinearLayoutManager(this@ListActivity) // Recycler view layout manager 설정
                 setHasFixedSize(true)
-                adapter = this@MainActivity.adapter
+                adapter = this@ListActivity.adapter
             }
-            // refresh 버튼 리스너 설정 - refresh버튼을 누르면 check인자값을 true로 바꿔 api에서 데이터를 다시 읽어온다.
+
+            // refresh 버튼 리스너 설정
             refleshButton.setOnClickListener {
                 lifecycleScope.launch {
                     refresh()
                 }
             }
 
-            //에디터에 글을 하나씩입력할때마다 UI 갱신
-            searchEditText.addTextChangedListener {
-                lifecycleScope.launch {
-                    refreshEdit()
-                }
-            }
-
-            //에디터에서 엔터, SEARCH를 클릭시 자판을 내려가게 만듬
-            searchEditText.setOnKeyListener { view, i, keyEvent ->
-                if (i == KeyEvent.KEYCODE_ENTER || i == KeyEvent.KEYCODE_SEARCH) {
-                    (getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager).hideSoftInputFromWindow(
-                        view.windowToken,
-                        0
-                    )
-                }
-                return@setOnKeyListener false
-            }
         }
-    }
-    // 상세 화면에서 새로고침을 하고 다시 Main 화면으로 돌아온 경우 새로고침된 데이터를 보여줄 수 있도록 onResume 에서 refresh 함수 호출한다
-    override fun onResume() {
-        super.onResume()
+        val cointitle_intent = item.cointitle
+        val cointitle: TextView = findViewById(R.id.list_cointitle)
+        cointitle.text = cointitle_intent
+
+        val button = findViewById<Button>(R.id.back_button)
+        button.setOnClickListener(object: View.OnClickListener{
+            override fun onClick(p0: View?) {
+                onBackPressed()
+            }
+        })
         lifecycleScope.launch {
             firstRefresh()
         }
     }
+/*
+    private fun addChartItem(lableitem: String,dataitem: String){
+        val item = ChartData()
+        item. = lableitem
+        item.lineData = dataitem
+        chartData.add(item)
+    }
 
-    //chekc라는 인자를 boolean타입으로 false로 초기화시켜두고
-    private suspend fun refresh() = withContext(Dispatchers.IO) {
-        val query = withContext(Dispatchers.Main) {
-            binding.searchEditText.text.toString()
+    private fun LineChart(chartData: ArrayList<ChartData>){
+        lineChart = findViewById(R.id.linechart)
+
+        val entries = mutableListOf<Entry>()
+        for (item in chartData){
+            entries.add(Entry(item.lableData.replace(("[^\\d.]").toRegex(),"").toFloat(),item.lineData.toFloat()))
         }
 
+        val lineDataSet: LineDataSet
+        lineDataSet = LineDataSet(entries,"가격 추이")
+        lineDataSet.color = Color.BLUE
+        lineDataSet.setCircleColor(Color.DKGRAY)
+        lineDataSet.setCircleHoleColor(Color.DKGRAY)
+
+        val dataSets = ArrayList<ILineDataSet>()
+        dataSets.add(lineDataSet)
+
+        val data = LineData(dataSets)
+
+        lineChart.data = data
+        lineChart.description = null
+    }
+
+    */
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putParcelable("item", item)
+    }
+
+
+    private suspend fun refresh() = withContext(Dispatchers.IO) {
         with(db.DataDao()) {
             //check 가 true가 되었을때는 데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
             val newData = runData()
             insert2All(*newData.toTypedArray())
-            val data = getAll(query)
+            val data2 = getItem2(item.cointitle)
+
+            val data = getAll2(data2)
             // 그렇게 ROOM에 저장된 데이터 UI로 갱신시킴 - UI갱신이므로 Dispatchers.Main에서 작업
             withContext(Dispatchers.Main) {
                 adapter.submitList(data)
@@ -120,34 +153,17 @@ class MainActivity : AppCompatActivity() {
 
     }
     private suspend fun firstRefresh() = withContext(Dispatchers.IO) {
-        val query = withContext(Dispatchers.Main) {
-            binding.searchEditText.text.toString()
-        }
         with(db.DataDao()) {
             //check 가 true가 되었을때는 데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
-            val data = getAll(query)
-            withContext(Dispatchers.Main) {
-                adapter.submitList(data)
-            }
-        }
-    }
+            val data2 = getItem2(item.cointitle)
 
-
-    private suspend fun refreshEdit() = withContext(Dispatchers.IO) {
-        val query = withContext(Dispatchers.Main) {
-            binding.searchEditText.text.toString()
-        }
-
-        with(db.DataDao()) {
-            //check 가 true가 되었을때는 데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
-
-            val data = getAll(query)
+            val data = getAll2(data2)
             // 그렇게 ROOM에 저장된 데이터 UI로 갱신시킴 - UI갱신이므로 Dispatchers.Main에서 작업
             withContext(Dispatchers.Main) {
                 adapter.submitList(data)
             }
-        }
 
+        }
     }
 
     private suspend fun runData(): List<Data> = withContext(Dispatchers.IO) {
@@ -170,8 +186,7 @@ class MainActivity : AppCompatActivity() {
 
         val root = JSONObject(buf.toString())       // 객체로 가져옴
         val data = root.getJSONObject("data")  //data먼저 객체로가져옴
-        val names =
-            data.names() ?: JSONArray()     // json(코인들의 이름)이 들어있는 array를 만듬 , data의 코인이름을 전부 가져옴
+        val names = data.names() ?: JSONArray()     // json(코인들의 이름)이 들어있는 array를 만듬 , data의 코인이름을 전부 가져옴
         val date = data.getString("date")     // date는 먼저 다른 코인처럼 요소가 없기떄문에 따로 가져옴.
         val items = arrayListOf<Data>() // Data의 요소를 가지는 arrayList를 생성
 
@@ -181,6 +196,7 @@ class MainActivity : AppCompatActivity() {
             val element = data.getJSONObject(name)  // 요소 이름에 해당하는 JSON 객체 가져옴
             items.add(Data(name, date, element))    // 가져온 Data타입의 요소들을 포함하여 items(arrayList)로 담음
         }
+
         return@withContext items
     }
 }
