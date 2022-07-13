@@ -5,17 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".DetailActivity">
+
     <LinearLayout
         android:id="@+id/detail_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
         <Button
             android:id="@+id/back_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/ic_baseline_arrow_back_ios_new_24"/>
+            android:background="@drawable/ic_baseline_arrow_back_ios_new_24" />
+
         <TextView
             android:id="@+id/detail_cointitle"
             android:layout_width="wrap_content"
@@ -35,7 +38,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
-
 
 
     <LinearLayout
@@ -173,7 +175,6 @@
                 android:textColor="@color/black"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
 
 
         </RelativeLayout>

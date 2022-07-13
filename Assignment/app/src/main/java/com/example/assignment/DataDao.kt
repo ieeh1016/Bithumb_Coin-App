@@ -2,7 +2,6 @@ package com.example.assignment
 
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
 @Dao
@@ -12,29 +11,16 @@ interface DataDao {
     @Query("SELECT * FROM Data WHERE date = (SELECT max(date) FROM Data) and cointitle LIKE '%' || :query || '%'")
     suspend fun getAll(query: String): List<Data>
 
+    //코인이름에 해당하는 행을 내림차순으로 가져온다.
     @Query("SELECT * FROM Data WHERE cointitle = :query ORDER BY date DESC")
-    suspend fun getAll2(query: String): List<Data>
+    suspend fun getQueryAll(query: String): List<Data>
 
-    //하나의 데이터를 읽어온다.
+    //해당되는 코인이름 모든 data가져와 List에 저장한다.
     @Query("SELECT * FROM Data WHERE cointitle = :coin")
-    suspend fun getItem(coin: String): Data
+    suspend fun getItem(coin: String): List<Data>
 
-    @Query("SELECT cointitle FROM Data WHERE cointitle = :coin")
-    suspend fun getItem2(coin: String): String
-
-
-
-    @Query("SELECT * FROM Data")
-    suspend fun getAllData(): List<Data>
-
-    //모든 데이터를 읽어와서 ROOM에 insert시킨다
-    @Insert(onConflict = OnConflictStrategy.REPLACE) //충돌처리 방식
+    //모든 행을 INSERT 한다.
+    @Insert
     suspend fun insertAll(vararg dataSet: Data) //가변인자
-
-    @Insert //충돌처리 방식
-    suspend fun insert2All(vararg dataSet: Data) //가변인자
-
-    @Query("DELETE FROM data")
-    suspend fun deleteAll()
 
 }

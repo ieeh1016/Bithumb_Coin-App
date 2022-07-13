@@ -3,7 +3,6 @@ package com.example.assignment
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.KeyEvent
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -14,7 +13,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.assignment.databinding.ActivityMainBinding
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -49,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root) //setContentView에는 binding.root 를 전달.
 
-        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "DataDB888")
+        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "DataDB102")
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
@@ -92,6 +90,7 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
     // 상세 화면에서 새로고침을 하고 다시 Main 화면으로 돌아온 경우 새로고침된 데이터를 보여줄 수 있도록 onResume 에서 refresh 함수 호출한다
     override fun onResume() {
         super.onResume()
@@ -109,7 +108,7 @@ class MainActivity : AppCompatActivity() {
         with(db.DataDao()) {
             //check 가 true가 되었을때는 데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
             val newData = runData()
-            insert2All(*newData.toTypedArray())
+            insertAll(*newData.toTypedArray())
             val data = getAll(query)
             // 그렇게 ROOM에 저장된 데이터 UI로 갱신시킴 - UI갱신이므로 Dispatchers.Main에서 작업
             withContext(Dispatchers.Main) {
@@ -119,6 +118,7 @@ class MainActivity : AppCompatActivity() {
         }
 
     }
+
     private suspend fun firstRefresh() = withContext(Dispatchers.IO) {
         val query = withContext(Dispatchers.Main) {
             binding.searchEditText.text.toString()

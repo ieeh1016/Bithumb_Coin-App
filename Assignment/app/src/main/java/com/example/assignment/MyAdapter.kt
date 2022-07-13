@@ -3,12 +3,11 @@ package com.example.assignment
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import androidx.recyclerview.widget.RecyclerView
-import com.example.assignment.databinding.CardviewLayoutBinding
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
+import androidx.recyclerview.widget.RecyclerView
+import com.example.assignment.databinding.CardviewLayoutBinding
 
 //ListAdapter와 DiffUtil 을 이용하여 수정이 필요한 부분만 갱신시킴으로써 갱신할때마다 adapter를 set하여 스크롤이 가장 위로 올라가는 부분을 해결하였다.
 class MyAdapter() :

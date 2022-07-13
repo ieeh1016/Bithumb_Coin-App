@@ -10,13 +10,15 @@
         android:id="@+id/list_linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:ignore="MissingConstraints"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        tools:ignore="MissingConstraints">
+
         <Button
             android:id="@+id/back_button"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:background="@drawable/ic_baseline_arrow_back_ios_new_24"/>
+            android:background="@drawable/ic_baseline_arrow_back_ios_new_24" />
+
         <TextView
             android:id="@+id/list_cointitle"
             android:layout_width="wrap_content"
@@ -31,13 +33,11 @@
             android:textColor="@color/black"
             android:textSize="30sp"
             android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@id/graph"
+            app:layout_constraintBottom_toTopOf="@id/linechart"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
-
-
 
 
     <com.github.mikephil.charting.charts.LineChart
@@ -58,7 +58,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/linechart"></androidx.recyclerview.widget.RecyclerView>
+        app:layout_constraintTop_toBottomOf="@id/linechart"/>
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/reflesh_button"
