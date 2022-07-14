@@ -8,10 +8,14 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.assignment.databinding.CardviewLayoutBinding
+import com.example.assignment.databinding.ActivityMainBinding
+
+import java.text.SimpleDateFormat
 
 //ListAdapter와 DiffUtil 을 이용하여 수정이 필요한 부분만 갱신시킴으로써 갱신할때마다 adapter를 set하여 스크롤이 가장 위로 올라가는 부분을 해결하였다.
 class MyAdapter() :
     ListAdapter<Data, MyAdapter.MyViewHolder>(object : DiffUtil.ItemCallback<Data>() {
+
         override fun areItemsTheSame(oldItem: Data, newItem: Data): Boolean {
             return oldItem.cointitle == newItem.cointitle
         }
@@ -25,16 +29,23 @@ class MyAdapter() :
         return MyViewHolder(CardviewLayoutBinding.inflate(layoutInflater, parent, false))
     }
 
+    private fun covertTimestampToDate(timestamp: String): String {
+        val sdf = SimpleDateFormat("yyyy.MM.dd / hh:mm:ss")
+        val date = sdf.format(timestamp.toLong())
+        return date.toString()
+    }
+
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = getItem(position)
+        val time = covertTimestampToDate(item.date)
 
         with(holder.binding) {
             itemCointitle.text = item.cointitle
             itemOpeningPrice.text = "시가: ${item.opening_price} 원"
             itemClosingPrice.text = "현재가: ${item.closing_price} 원"
             itemUnitsTraded24H.text = "거래량: ${item.units_traded_24H}"
-            itemDate.text = "TimeStamp: ${item.date}"
+            itemDate.text = "최근 갱신(저장) 시간: $time"
 
             root.setOnClickListener {
                 itemClickListener?.onClick(item)

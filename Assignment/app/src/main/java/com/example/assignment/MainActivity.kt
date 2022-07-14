@@ -25,10 +25,12 @@ import java.net.URL
 
 class MainActivity : AppCompatActivity() {
 
-    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) } //by lazy를 사용해서 처음 호출될 때 초기화 되도록 설정한다. (by lazy = 처음 선언할때 바로 초기화(할당))
+    //by lazy를 사용해서 처음 호출될 때 초기화 되도록 설정한다. (by lazy - 처음 선언할때 바로 초기화(할당))
+    private val binding by lazy { ActivityMainBinding.inflate(layoutInflater) }
 
     private lateinit var db: AppDatabase
 
+    //Main화면에 보여지는 코인 목록을 클릭했을때 data(item)를 넘겨준다.
     private val adapter by lazy {
         MyAdapter().apply {
             setItemClickListener(object : MyAdapter.onItemClickListener {
@@ -47,12 +49,13 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root) //setContentView에는 binding.root 를 전달.
 
-        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "DataDB102")
+        //ROOM DB를 만들고 실행시킨다.
+        db = Room.databaseBuilder(applicationContext, AppDatabase::class.java, "DataDB103")
             .addCallback(object : RoomDatabase.Callback() {
                 override fun onCreate(db: SupportSQLiteDatabase) {
                     super.onCreate(db)
                     lifecycleScope.launch {
-                        refresh()
+                        insertRefresh() //(데이터를 다시 읽어와서 room에 삽입하고 Edit에 쓰여진 query를 포함한 코인데이터로 UI를  갱신)
                     }
                 }
             }).build()
@@ -64,17 +67,18 @@ class MainActivity : AppCompatActivity() {
                 setHasFixedSize(true)
                 adapter = this@MainActivity.adapter
             }
-            // refresh 버튼 리스너 설정 - refresh버튼을 누르면 check인자값을 true로 바꿔 api에서 데이터를 다시 읽어온다.
+
+            //refresh 버튼 리스너 설정 - 새로고침 버튼을 누를때마다 refresh함수 실행
             refleshButton.setOnClickListener {
                 lifecycleScope.launch {
-                    refresh()
+                    insertRefresh()
                 }
             }
 
-            //에디터에 글을 하나씩입력할때마다 UI 갱신
+            //에디터에 글을 하나씩입력할때마다 room에 저장된 데이터에서 에디터에서 쓴 query를 포함한 코인데이터로 UI를 갱신
             searchEditText.addTextChangedListener {
                 lifecycleScope.launch {
-                    refreshEdit()
+                    uiRefresh()
                 }
             }
 
@@ -91,40 +95,37 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    // 상세 화면에서 새로고침을 하고 다시 Main 화면으로 돌아온 경우 새로고침된 데이터를 보여줄 수 있도록 onResume 에서 refresh 함수 호출한다
+    // 상세 화면에서 새로고침을 하고 다시 Main 화면으로 돌아온 경우 새로고침된 데이터를 보여줄 수 있도록 onResume 에서 firstRefresh 함수 호출한다
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
-            firstRefresh()
+            uiRefresh() // room에 저장된 데이터를 edit에 쓰여진 query가 포함된 코인데이터로 UI를 갱신시킨다.
         }
     }
 
-    //chekc라는 인자를 boolean타입으로 false로 초기화시켜두고
-    private suspend fun refresh() = withContext(Dispatchers.IO) {
+    //API에서 읽어온 데이터를 ROOM에 삽입하고 EDIT에서 작성한 string이 이름으로 포함된 코인으로 UI를 갱신한다.
+    private suspend fun insertRefresh() = withContext(Dispatchers.IO) {
         val query = withContext(Dispatchers.Main) {
             binding.searchEditText.text.toString()
         }
-
         with(db.DataDao()) {
-            //check 가 true가 되었을때는 데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
+            //데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
             val newData = runData()
             insertAll(*newData.toTypedArray())
+            //edit에 쓰여진 string을 포함한 코인을 select한다.
             val data = getAll(query)
-            // 그렇게 ROOM에 저장된 데이터 UI로 갱신시킴 - UI갱신이므로 Dispatchers.Main에서 작업
+            //ROOM에 저장된 데이터 UI로 갱신시킨다. - UI갱신이므로 Dispatchers.Main에서 작업
             withContext(Dispatchers.Main) {
                 adapter.submitList(data)
             }
-
         }
-
     }
 
-    private suspend fun firstRefresh() = withContext(Dispatchers.IO) {
+    private suspend fun uiRefresh() = withContext(Dispatchers.IO) {
         val query = withContext(Dispatchers.Main) {
             binding.searchEditText.text.toString()
         }
         with(db.DataDao()) {
-            //check 가 true가 되었을때는 데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
             val data = getAll(query)
             withContext(Dispatchers.Main) {
                 adapter.submitList(data)
@@ -132,23 +133,6 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-
-    private suspend fun refreshEdit() = withContext(Dispatchers.IO) {
-        val query = withContext(Dispatchers.Main) {
-            binding.searchEditText.text.toString()
-        }
-
-        with(db.DataDao()) {
-            //check 가 true가 되었을때는 데이터를 runData()를 이용하여 api로 부터 데이터를 다시 읽어온다
-
-            val data = getAll(query)
-            // 그렇게 ROOM에 저장된 데이터 UI로 갱신시킴 - UI갱신이므로 Dispatchers.Main에서 작업
-            withContext(Dispatchers.Main) {
-                adapter.submitList(data)
-            }
-        }
-
-    }
 
     private suspend fun runData(): List<Data> = withContext(Dispatchers.IO) {
         val site = "https://api.bithumb.com/public/ticker/ALL_KRW" // 빗썸API 정보를 가지고 있는 주소
@@ -166,7 +150,6 @@ class MainActivity : AppCompatActivity() {
                 buf.append(str)
             }
         } while (str != null)
-
 
         val root = JSONObject(buf.toString())       // 객체로 가져옴
         val data = root.getJSONObject("data")  //data먼저 객체로가져옴
