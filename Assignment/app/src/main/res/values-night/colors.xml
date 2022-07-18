@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="Primary">#22FFFF</color>
-    <color name="PrimaryVariant">#FF00FF</color>
+    <color name="PrimaryVariant">#3330FF</color>
     <color name="Secondary">#22FFFF</color>
     <color name="SecondaryVariant">#22FFFF</color>
     <color name="Background">#22FFFF</color>
     <color name="Surface">#22FFFF</color>
-    <color name="Error">#FF00FF</color>
+    <color name="Error">#3330FF</color>
     <color name="OnPrimary">#22FFFF</color>
     <color name="OnSecondary">#22FFFF</color>
-    <color name="OnBackground">#FF00FF</color>
+    <color name="OnBackground">#3330FF</color>
     <color name="OnSurface">#22FFFF</color>
-    <color name="OnError">#FF00FF</color>
-    <color name="Accent">#FF00FF</color>
+    <color name="OnError">#3330FF</color>
+    <color name="Accent">#3330FF</color>
     <color name="black">#333333</color>
     <color name="white">#FFFFFF</color>
     <color name="ywcolor">#FFFFFF</color>

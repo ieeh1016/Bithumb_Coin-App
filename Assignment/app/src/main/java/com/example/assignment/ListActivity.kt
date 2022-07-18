@@ -42,7 +42,7 @@ class ListActivity : AppCompatActivity() {
         Room.databaseBuilder(
             applicationContext,
             AppDatabase::class.java,
-            "DataDB103"
+            "DataDB104"
         ).build()
     }
 
