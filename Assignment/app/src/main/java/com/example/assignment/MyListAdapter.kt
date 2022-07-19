@@ -32,6 +32,7 @@ class MyListAdapter() :
         return date.toString()
     }
 
+
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         val item = getItem(position)
@@ -43,7 +44,6 @@ class MyListAdapter() :
             root.setOnClickListener {
                 itemClickListener?.onClick(item)
             }
-
         }
     }
 

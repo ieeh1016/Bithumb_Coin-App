@@ -1,16 +1,24 @@
 package com.example.assignment
 
+
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
-import com.example.assignment.databinding.ActivityListBinding
+import com.example.assignment.databinding.FragmentListBinding
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -29,66 +37,68 @@ import java.io.InputStreamReader
 import java.net.URL
 import java.text.SimpleDateFormat
 
-class ListActivity : AppCompatActivity() {
+
+class ListFragment : Fragment() {
 
     private val lineChart: LineChart by lazy { binding.linechart }
 
-    private var _item: Data? = null
+    private var _binding: FragmentListBinding? = null
+    private val binding get() = _binding!!
+    private lateinit var db: AppDatabase
+
+    private var _item: Data? = arguments?.getParcelable("item")
     private val item get() = _item!!
-
-    private val binding by lazy { ActivityListBinding.inflate(layoutInflater) }
-
-    private val db by lazy {
-        Room.databaseBuilder(
-            applicationContext,
-            AppDatabase::class.java,
-            "DataDB104"
-        ).build()
-    }
 
     private val adapter by lazy {
         MyListAdapter().apply {
             setItemClickListener(object : MyListAdapter.onItemClickListener {
                 override fun onClick(item: Data) {
-                    // 데이터 자체를 DetailActivity 로 넘겨줌
-                    val intent = Intent(this@ListActivity, DetailActivity::class.java).apply {
-                        putExtra("item", item)
-                    }
-                    startActivity(intent)
+                    val fragment3 = DetailFragment()
+                    val bundle = Bundle()
+                    bundle.putParcelable("item",item)
+                    fragment3.arguments = bundle
+                    val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction().replace(R.id.fragment_main, fragment3)
+                    transaction.addToBackStack(tag).commit()
+
                 }
             })
         }
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(binding.root) //setContentView에는 binding.root 를 전달.
 
-        _item = intent.getParcelableExtra("item")
-        if (savedInstanceState != null) {
-            _item = savedInstanceState.getParcelable("item")
+
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+
+        // Inflate the layout for this fragment
+
+        _binding = FragmentListBinding.inflate(inflater,container,false)
+        _item = arguments?.getParcelable("item")
+        return binding.root
+    }
+
+    private fun backFragment(){
+        activity?.supportFragmentManager!!.beginTransaction().replace(R.id.fragment_main, MainFragment()).commit()
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        val cointitle_bundle = item.cointitle
+        binding.listCointitle.text = "$cointitle_bundle"
+        binding.backButton.setOnClickListener {
+            backFragment()
         }
-
-
-        //상단 제목
-        val cointitle_intent = item.cointitle
-        val cointitle: TextView = findViewById(R.id.list_cointitle)
-        cointitle.text = cointitle_intent
-
-        //뒤로가기 버튼
-        val button = findViewById<Button>(R.id.back_button)
-        button.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(p0: View?) {
-                onBackPressed()
-            }
-        })
-
-        with(binding) { //Non-nullable 수신 객체이고 결과가 필요하지 않을때 with 을 사용함.
+        db = Room.databaseBuilder(
+            requireActivity().applicationContext,
+            AppDatabase::class.java,
+            "DataDB104"
+        ).build()
+        with(binding) {
             recyclerviewList.apply {
-                layoutManager =
-                    LinearLayoutManager(this@ListActivity) // Recycler view layout manager 설정
+                layoutManager = LinearLayoutManager(this@ListFragment.context) // Recycler view layout manager 설정
                 setHasFixedSize(true)
-                adapter = this@ListActivity.adapter
+                adapter = this@ListFragment.adapter
             }
 
             // refresh 버튼 리스너 설정
@@ -103,19 +113,15 @@ class ListActivity : AppCompatActivity() {
         }
 
         //화면이 전환되면 선택한 ITEM에 데이터만 가져와 UI를 띄워준다.
+    }
+
+    override fun onResume() {
+        super.onResume()
         lifecycleScope.launch {
-            uiRefresh()
+            uiRefresh() // room에 저장된 데이터를 edit에 쓰여진 query가 포함된 코인데이터로 UI를 갱신시킨다.
             chart()
         }
     }
-
-    //화면 돌리기 오류 제거
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putParcelable("item", item)
-    }
-
-    //Timestamp -> Date 변환기
     private fun covertTimestampToDate(timestamp: String): String {
         val sdf = SimpleDateFormat("yyyy.MM.dd / hh:mm:ss")
         val date = sdf.format(timestamp.toLong())
