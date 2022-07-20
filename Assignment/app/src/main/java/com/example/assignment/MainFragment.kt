@@ -45,7 +45,7 @@ class MainFragment : Fragment() {
                     bundle.putParcelable("item",item)
                     fragment2.arguments = bundle
                     val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction().replace(R.id.fragment_main, fragment2)
-                    transaction.addToBackStack(tag).commit()
+                    transaction.addToBackStack(null).commit()
                 }
             })
         }

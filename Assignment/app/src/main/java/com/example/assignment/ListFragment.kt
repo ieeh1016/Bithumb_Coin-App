@@ -40,8 +40,6 @@ import java.text.SimpleDateFormat
 
 class ListFragment : Fragment() {
 
-    private val lineChart: LineChart by lazy { binding.linechart }
-
     private var _binding: FragmentListBinding? = null
     private val binding get() = _binding!!
     private lateinit var db: AppDatabase
@@ -58,7 +56,8 @@ class ListFragment : Fragment() {
                     bundle.putParcelable("item",item)
                     fragment3.arguments = bundle
                     val transaction: FragmentTransaction = requireActivity().supportFragmentManager.beginTransaction().replace(R.id.fragment_main, fragment3)
-                    transaction.addToBackStack(tag).commit()
+                    transaction.addToBackStack(null).commit()
+
 
                 }
             })
@@ -80,8 +79,13 @@ class ListFragment : Fragment() {
     }
 
     private fun backFragment(){
-        activity?.supportFragmentManager!!.beginTransaction().replace(R.id.fragment_main, MainFragment()).commit()
+        activity?.supportFragmentManager!!.beginTransaction().remove(this).commit()
+        activity?.supportFragmentManager!!.popBackStack()
+
     }
+
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val cointitle_bundle = item.cointitle
@@ -109,19 +113,14 @@ class ListFragment : Fragment() {
                     chart()
                 }
             }
-
         }
-
-        //화면이 전환되면 선택한 ITEM에 데이터만 가져와 UI를 띄워준다.
-    }
-
-    override fun onResume() {
-        super.onResume()
         lifecycleScope.launch {
             uiRefresh() // room에 저장된 데이터를 edit에 쓰여진 query가 포함된 코인데이터로 UI를 갱신시킨다.
             chart()
         }
     }
+
+
     private fun covertTimestampToDate(timestamp: String): String {
         val sdf = SimpleDateFormat("yyyy.MM.dd / hh:mm:ss")
         val date = sdf.format(timestamp.toLong())
@@ -169,7 +168,7 @@ class ListFragment : Fragment() {
             for (data in Data) {
                 pricelist.add(data.closing_price)
             }
-
+            Log.d("확인용","$data2")
             val entries = ArrayList<Entry>()
 
             for (i in 0 until pricelist.size) {
@@ -187,23 +186,23 @@ class ListFragment : Fragment() {
             dataset.color = Color.BLACK
             dataset.setCircleColor(Color.RED)
             dataset.setCircleHoleColor(Color.RED)
-
-            lineChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
-            lineChart.getTransformer(YAxis.AxisDependency.LEFT)
-            lineChart.xAxis.position = XAxis.XAxisPosition.BOTTOM
-            lineChart.xAxis.textSize = 12.5f
-            lineChart.description.isEnabled = false
+            with(binding.linechart){
+            xAxis.valueFormatter = IndexAxisValueFormatter(labels)
+            getTransformer(YAxis.AxisDependency.LEFT)
+            xAxis.position = XAxis.XAxisPosition.BOTTOM
+            xAxis.textSize = 12.5f
+            description.isEnabled = false
 
             val data = LineData(dataset)
-            lineChart.data = data
-            lineChart.legend.textSize = 15F
-            lineChart.legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
-            lineChart.legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
-            lineChart.setVisibleXRangeMaximum(2f)
-            lineChart.setVisibleXRangeMinimum(2f)
-            lineChart.xAxis.granularity = 1f
-            lineChart.invalidate()
-
+            this.data = data
+            legend.textSize = 15F
+            legend.verticalAlignment = Legend.LegendVerticalAlignment.TOP
+            legend.horizontalAlignment = Legend.LegendHorizontalAlignment.CENTER
+            setVisibleXRangeMaximum(2f)
+            setVisibleXRangeMinimum(2f)
+            xAxis.granularity = 1f
+            invalidate()
+            }
         }
     }
 
@@ -239,5 +238,9 @@ class ListFragment : Fragment() {
             items.add(Data(name, date, element))    // 가져온 Data타입의 요소들을 포함하여 items(arrayList)로 담음
         }
         return@withContext items
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }

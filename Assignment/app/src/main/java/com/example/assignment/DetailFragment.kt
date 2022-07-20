@@ -31,7 +31,8 @@ class DetailFragment : Fragment() {
 
 
     private fun backFragment(){
-        activity?.supportFragmentManager!!.beginTransaction().replace(R.id.fragment_main, ListFragment()).commit()
+        activity?.supportFragmentManager!!.beginTransaction().remove(this).commit()
+        activity?.supportFragmentManager!!.popBackStack()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
