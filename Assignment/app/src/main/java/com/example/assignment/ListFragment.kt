@@ -1,25 +1,17 @@
 package com.example.assignment
 
 
-import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.room.Room
 import com.example.assignment.databinding.FragmentListBinding
-import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.components.YAxis
@@ -168,7 +160,6 @@ class ListFragment : Fragment() {
             for (data in Data) {
                 pricelist.add(data.closing_price)
             }
-            Log.d("확인용","$data2")
             val entries = ArrayList<Entry>()
 
             for (i in 0 until pricelist.size) {
