@@ -20,3 +20,10 @@
  - 그래프 구현
  - 업데이트 상세 페이지 구현
 
+### 개발 화면
+<p align="center">
+<img src="https://user-images.githubusercontent.com/65186857/188111084-91114293-b35b-46b7-8881-540f12317003.jpg" width ="30%" height = "500"/>
+<img src="https://user-images.githubusercontent.com/65186857/188111164-7db74ce7-a120-4d00-a2c4-03855ad92d3f.jpg" width ="30%" height = "500"/>
+<img src="https://user-images.githubusercontent.com/65186857/188111196-89f202d0-9afc-41cc-9332-e7a49aeafdb0.jpg" width ="30%" height = "500"/>
+<img src="https://user-images.githubusercontent.com/65186857/188111251-7d3055cb-4187-4adb-b658-69964e659623.jpg" width ="30%" height = "500"/>
+</p>
