@@ -2,7 +2,7 @@
 빗썸 Open API를 활용한 Coin정보 확인 어플리케이션 개발
 
 
-## 개발전 프로토 타입 제작
+## 개발전 Prototype 제작
 ![image](https://user-images.githubusercontent.com/65186857/188103486-a560a7d5-f813-4d75-a340-405e8b711c98.png)
 
 
